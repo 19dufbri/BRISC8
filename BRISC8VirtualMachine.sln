@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BRISC8VirtualMachine", "BRISC8VirtualMachine\BRISC8VirtualMachine.csproj", "{AA305D5D-DE77-4114-9AB1-D72F371F6540}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BRISC8Assembler", "BRISC8Assembler\BRISC8Assembler.csproj", "{088BD4B6-0F55-4D62-8F69-FE20A94D1D68}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleCode", "SampleCode", "{93F1C9BB-AB48-4E37-B093-A84C7219724B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SingleFiles", "SingleFiles", "{9A7B5CA6-2429-4A54-817A-DF51B1915F9D}"
+	ProjectSection(SolutionItems) = preProject
+		SampleCode\SingleFiles\HelloWorld.b8a = SampleCode\SingleFiles\HelloWorld.b8a
+		SampleCode\SingleFiles\Sample.bf = SampleCode\SingleFiles\Sample.bf
+		SampleCode\SingleFiles\HelloWorld.b8b = SampleCode\SingleFiles\HelloWorld.b8b
+		SampleCode\SingleFiles\Sample.b8b = SampleCode\SingleFiles\Sample.b8b
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BRISC8BrainFuckCompiler", "BRISC8BrainFuckCompiler\BRISC8BrainFuckCompiler.csproj", "{F4067889-EBC6-4474-8543-59527FF6CFCA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA305D5D-DE77-4114-9AB1-D72F371F6540}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA305D5D-DE77-4114-9AB1-D72F371F6540}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA305D5D-DE77-4114-9AB1-D72F371F6540}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA305D5D-DE77-4114-9AB1-D72F371F6540}.Release|Any CPU.Build.0 = Release|Any CPU
+		{088BD4B6-0F55-4D62-8F69-FE20A94D1D68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{088BD4B6-0F55-4D62-8F69-FE20A94D1D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{088BD4B6-0F55-4D62-8F69-FE20A94D1D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{088BD4B6-0F55-4D62-8F69-FE20A94D1D68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4067889-EBC6-4474-8543-59527FF6CFCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4067889-EBC6-4474-8543-59527FF6CFCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4067889-EBC6-4474-8543-59527FF6CFCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4067889-EBC6-4474-8543-59527FF6CFCA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9A7B5CA6-2429-4A54-817A-DF51B1915F9D} = {93F1C9BB-AB48-4E37-B093-A84C7219724B}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,11 @@
+LIR #0x41, %R0
+LIR #0x00, %R1
+IOW %R1, %R0
+LIR #0xFF, %R2
+IOW %R2, %R1
+
+ProgramCounter:
+.0x00
+
+Program:
+.""
