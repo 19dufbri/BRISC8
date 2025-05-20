@@ -1,4 +1,6 @@
-﻿namespace BRISC8VirtualMachine
+﻿using BRISC8VirtualMachine.Peripherals;
+
+namespace BRISC8VirtualMachine
 {
     public class VirtualMachine
     {
