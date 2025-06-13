@@ -1,9 +1,9 @@
 ﻿namespace BRISC8VirtualMachine
 {
-    public interface IPeripheral
-    {
-        byte? RunCycle();
-        void DoWrite(byte addr, byte value);
-        byte DoRead(byte addr);
-    }
+  public interface IPeripheral
+  {
+    void RunCycle();
+    void DoWrite(byte addr, byte value);
+    byte DoRead(byte addr);
+  }
 }
