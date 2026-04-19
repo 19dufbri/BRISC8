@@ -9,12 +9,12 @@
 
     public static List<byte> InstructionLil(byte rA, byte i)
     {
-      return bListOf((byte)((rA << 2) | ((i & 0x0C) << 4) | (i & 0x03)));
+      return bListOf((byte)((rA << 2) | ((i & 0x0C) << 2) | (i & 0x03)));
     }
 
     public static List<byte> InstructionLih(byte rA, byte i)
     {
-      return bListOf((byte)(0x40 | (rA << 2) | ((i & 0x0C) << 4) | (i & 0x03)));
+      return bListOf((byte)(0x40 | (rA << 2) | ((i & 0x0C) << 2) | (i & 0x03)));
     }
 
     public static List<byte> InstructionAdd(byte rA, byte rB)
