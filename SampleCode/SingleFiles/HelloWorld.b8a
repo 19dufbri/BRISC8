@@ -5,7 +5,7 @@ LIR #0xFF, %R2
 IOW %R2, %R1
 
 ProgramCounter:
-.0x00
+.0x000102
 
 Program:
-.""
+."Hello World!\0\0"

@@ -1,0 +1,35 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Debug executable 'brisc8asm'",
+            "type": "lldb",
+            "request": "launch",
+            "cargo": {
+                "args": [
+                    "run",
+                    "--bin=brisc8asm"
+                ]
+            },
+            "env": {
+                "RUST_BACKTRACE": "1"
+            },
+            "args": ["../SampleCode/SingleFiles/HelloWorld.b8a", "a.out"]
+        },
+        {
+            "name": "Debug unit tests in executable 'brisc8asm'",
+            "type": "lldb",
+            "request": "launch",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--bin=brisc8asm"
+                ]
+            }
+        }
+    ]
+}
