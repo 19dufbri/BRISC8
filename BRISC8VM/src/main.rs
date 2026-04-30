@@ -19,7 +19,6 @@ fn main() {
     let mut core = brisc8core::Brisc8core::new();
     for (index, byte) in program.iter().enumerate() {
         core.set_memory(index as u8, *byte);
-        print!("{:x} ", byte);
     }
 
     core.set_peripheral(0x00, Box::new(Console {}));

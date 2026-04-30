@@ -47,7 +47,7 @@ impl Brisc8core {
         match opcode >> 4 {
             0b0000..=0b0011 => {
                 // LIL #i, rA
-                self.registers[r_a as usize] = (self.registers[r_a as usize] & 0b1111_0000) | imm;
+                self.registers[r_a as usize] = imm;
             },
             0b0100..=0b0111 => {
                 // LIH #i, rA
@@ -55,7 +55,7 @@ impl Brisc8core {
             },
             0b1000 => {
                 // ADD rA, rB
-                self.registers[r_a as usize] = self.registers[r_a as usize] | self.registers[r_b as usize];
+                self.registers[r_a as usize] = self.registers[r_a as usize].wrapping_add(self.registers[r_b as usize]);
             },
             0b1001 => {
                 // NAND rA, rB
@@ -88,6 +88,12 @@ impl Brisc8core {
                 if (self.registers[r_a as usize] as i8) < (self.registers[r_b as usize] as i8)  {
                     self.registers[0x3 as usize] += 1;
                 }
+            },
+            0b1111 => {
+                // SWP rA, rB
+                let a_val = self.registers[r_a as usize];
+                self.registers[r_a as usize] = self.registers[r_b as usize];
+                self.registers[r_b as usize] = a_val
             },
             _ => {
                 println!("Instruction not implemented {:?}", opcode >> 4);
