@@ -1,11 +1,45 @@
-LIR #0x41, %R0
-LIR #0x00, %R1
-IOW %R1, %R0
-LIR #0xFF, %R2
-IOW %R2, %R1
+LIR %R0, $Hello
+CALL %R2, $PrintString
+LIR %R1, #0xFF
+LIR %R2, #0x00
+IOW %R1, %R2
 
-ProgramCounter:
-.0x000102
+Hello:
+."Hello World!\0"
 
-Program:
-."Hello World!\0\0"
+-- r0 points to string
+-- r1 clobber
+-- r2 return ptr 
+PrintString:
+-- Store return address
+LIR %R1, $PrintStringIndex
+STO %R1, %R0
+LIR %R1, $PrintStringReturn
+STO %R1, %R2
+
+PrintLoop:
+LIR %R2, #0x00
+LIR %R0, $PrintStringIndex  -- Pull char pointer pointer
+LOA %R0, %R0                -- Pull char pointer
+LOA %R0, %R0                -- Pull char
+LIR %R1, $PrintEnd          -- Load end addr
+SKL %R2, %R0                -- Skip if 0 < char
+JMP %R1                     -- So we jump if 0 >= char
+IOW %R2, %R0                -- Print the char
+
+LIR %R2, $PrintStringIndex  -- Get our index
+LOA %R0, %R2
+LIR %R1, #0x01              -- Advance to next char
+ADD %R0, %R1
+STO %R2, %R0                -- Store progress
+JMP %R2, $PrintLoop
+
+PrintEnd:
+LIR %R2, $PrintStringReturn
+LOA %R2, %R2
+RET %R2
+
+PrintStringIndex:
+.0x00
+PrintStringReturn:
+.0x00

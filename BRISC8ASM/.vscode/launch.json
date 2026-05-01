@@ -18,7 +18,7 @@
             "env": {
                 "RUST_BACKTRACE": "1"
             },
-            "args": ["../SampleCode/SingleFiles/HelloWorld.b8a", "a.out"]
+            "args": ["../SampleCode/SingleFiles/HelloWorld.b8a", "../SampleCode/SingleFiles/HelloWorld.b8b"]
         },
         {
             "name": "Debug unit tests in executable 'brisc8asm'",

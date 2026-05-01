@@ -87,7 +87,7 @@ impl<T: BufRead> Iterator for Lexer<T> {
         }
 
         let (instruction, args) = line.split_once(' ')?;
-        let args = args.split(',').map(|x| parse_arg(x)).collect::<Result<Vec<_>, _>>();
+        let args: std::result::Result<Vec<InstructionArg>, anyhow::Error> = args.split(',').map(|x| parse_arg(x)).collect::<Result<Vec<_>, _>>();
         if let Err(err) = args {
             self.error = true;
             return Some(Err(err));

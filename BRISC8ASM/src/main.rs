@@ -23,17 +23,17 @@ fn main() {
     let reader = BufReader::new(file);
     let tokenizer = Lexer::new(reader);
     let tokens = tokenizer.collect::<Result<Vec<_>, _>>();
-    if let Err(_err) = tokens {
+    if let Err(err) = tokens {
+        dbg!(err);
         panic!("At the disco!");
     }
 
     let mut generator = Generator::new();
-    let result = generator.assemble(tokens.unwrap()).unwrap();
-
+    let (result, size) = generator.assemble(tokens.unwrap()).unwrap();
 
     let file = File::create(args.output_file).unwrap();
     let mut writer = BufWriter::new(file);
     writer.write_all(&result).unwrap();
 
-    println!("Done!");
+    println!("Done! Program is {size} bytes, {:.02}% of memory", size as f64 / 2.56f64);
 }
