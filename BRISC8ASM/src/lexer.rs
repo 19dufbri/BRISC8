@@ -3,7 +3,7 @@ use std::{collections::VecDeque, io::{BufRead, Lines}, iter::Peekable};
 use anyhow::{Result, anyhow};
 
 #[derive(Debug)]
-pub struct Tokenizer<T: BufRead> {
+pub struct Lexer<T: BufRead> {
     input: Peekable<Lines<T>>,
     literal_part: Option<VecDeque<u8>>,
     error: bool,
@@ -13,20 +13,20 @@ pub struct Tokenizer<T: BufRead> {
 pub enum Token {
     Label(String),
     Instruction(String, Vec<InstructionArg>),
-    String(String),
     Byte(u8),
+    Directive(String),
 }
 
 #[derive(Debug)]
 pub enum InstructionArg {
     Register(u8),
-    Immediate(u16),
+    Immediate(u8),
     Label(String),
 }
 
-impl<T: BufRead> Tokenizer<T> {
-    pub fn new(input: T) -> Tokenizer<T> {
-        return Tokenizer {
+impl<T: BufRead> Lexer<T> {
+    pub fn new(input: T) -> Lexer<T> {
+        return Lexer {
             input: input.lines().peekable(),
             literal_part: None,
             error: false,
@@ -34,7 +34,7 @@ impl<T: BufRead> Tokenizer<T> {
     }
 }
 
-impl<T: BufRead> Iterator for Tokenizer<T> {
+impl<T: BufRead> Iterator for Lexer<T> {
     type Item = Result<Token>;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -71,6 +71,11 @@ impl<T: BufRead> Iterator for Tokenizer<T> {
             return self.next();
         }
 
+        // directive
+        if line.starts_with('#') {
+            return Some(Ok(Token::Directive(line[1..].into())));
+        }
+
         // label
         if line.ends_with(':') {
             let label = &line[..line.len()-1];
@@ -91,49 +96,26 @@ impl<T: BufRead> Iterator for Tokenizer<T> {
     }
 }
 
-fn char_store(buffer: &mut Vec<u8>, char: char) -> () {
-    let mut buf = [0; 4];
-    char.encode_utf8(&mut buf);
-    for x in 0..char.len_utf8() {
-        buffer.push(buf[x]);
+trait StoreChar {
+    fn push_char(&mut self, value: char);
+}
+
+impl StoreChar for Vec<u8> {
+    fn push_char(&mut self, value: char) {
+        let mut buf = [0; 4];
+        value.encode_utf8(&mut buf);
+        for x in 0..value.len_utf8() {
+            self.push(buf[x]);
+        }
     }
 }
 
-fn parse_hex_literal(line: &str) -> Vec<u8> {
-    let mut val = 0u8;
+fn parse_hex_literal(mut line: &str) -> Vec<u8> {
     let mut value = Vec::new();
-    let mut next = false;
-    for x in line.chars() {
-        match x {
-            '0' => val += 0x0,
-            '1' => val += 0x1,
-            '2' => val += 0x2,
-            '3' => val += 0x3,
-            '4' => val += 0x4,
-            '5' => val += 0x5,
-            '6' => val += 0x6,
-            '7' => val += 0x7,
-            '8' => val += 0x8,
-            '9' => val += 0x9,
-            'a' | 'A' => val += 0xA,
-            'b' | 'B' => val += 0xB,
-            'c' | 'C' => val += 0xC,
-            'd' | 'D' => val += 0xD,
-            'e' | 'E' => val += 0xE,
-            'f' | 'F' => val += 0xF,
-            _ => panic!("Unhandled character while parsing hex")
-        }
-        if !next {
-            next = true;
-            val = val << 4;
-        } else {
-            next = false;
-            value.push(val);
-            val = 0;
-        }
-    }
-    if next {
-        panic!("Hex not correctly terminated!");
+    while line.len() >= 2 {
+        let result = line.split_at(2);
+        line = result.1;
+        value.push(u8::from_str_radix(result.0, 16).unwrap());
     }
 
     return value;
@@ -142,17 +124,17 @@ fn parse_hex_literal(line: &str) -> Vec<u8> {
 fn parse_string(line: &str) -> Vec<u8> {
     // string
     let mut escape = false;
-    let mut value = Vec::new();
+    let mut value: Vec<u8> = Vec::new();
     for char in line[1..].chars() {
         if escape {
             match char {
-                'n' => char_store(&mut value, '\n'),
-                'r' => char_store(&mut value, '\r'),
-                't' => char_store(&mut value, '\t'),
-                '\\' => char_store(&mut value, '\\'),
-                '0' => char_store(&mut value, '\0'),
-                '\'' => char_store(&mut value, '\''),
-                '"' => char_store(&mut value, '"'),
+                'n' => value.push_char('\n'),
+                'r' => value.push_char('\r'),
+                't' => value.push_char('\t'),
+                '\\' => value.push_char('\\'),
+                '0' => value.push_char('\0'),
+                '\'' => value.push_char('\''),
+                '"' => value.push_char('"'),
                 _ => panic!("Unhandled escaped char."),
             }
             escape = false;
@@ -163,7 +145,7 @@ fn parse_string(line: &str) -> Vec<u8> {
             } else if char == '"' {
                 break;
             }
-            char_store(&mut value, char);
+            value.push_char(char);
         }
     }
     if escape {
@@ -182,12 +164,12 @@ fn parse_arg(arg_init: &str) -> Result<InstructionArg> {
         if arg.starts_with("0x") || arg.starts_with("0X") {
             // hex
             let arg = &arg[2..];
-            let value = u16::from_str_radix(arg, 16)?;
-            return Ok(InstructionArg::Immediate(value));
+            let value = u8::from_str_radix(arg, 16)?;
+            return Ok(InstructionArg::Immediate(value as u8));
         } else {
             // decimal
-            let signed_value = i32::from_str_radix(arg, 10)?;
-            return Ok(InstructionArg::Immediate(signed_value as u16));
+            let signed_value = i16::from_str_radix(arg, 10)?;
+            return Ok(InstructionArg::Immediate(signed_value as u8));
         }
     } else if arg.starts_with('%') {
         // register

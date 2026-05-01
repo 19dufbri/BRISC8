@@ -1,10 +1,13 @@
+use std::io::{BufWriter, Write};
 use std::{fs::File, io::BufReader};
 
 use clap::Parser;
 
-use crate::tokenizer::Tokenizer;
+use crate::lexer::Lexer;
+use crate::generator::Generator;
 
-mod tokenizer;
+mod lexer;
+mod generator;
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -18,14 +21,19 @@ fn main() {
     let args = Args::parse();
     let file = File::open(args.input_file).unwrap();
     let reader = BufReader::new(file);
-    let tokenizer = Tokenizer::new(reader);
+    let tokenizer = Lexer::new(reader);
+    let tokens = tokenizer.collect::<Result<Vec<_>, _>>();
+    if let Err(_err) = tokens {
+        panic!("At the disco!");
+    }
 
-    tokenizer.for_each(|x| {
-        match x {
-            Ok(token) => println!("{:?}", token),
-            Err(err) => println!("ERROR: {}", err),
-        }
-    });
+    let mut generator = Generator::new();
+    let result = generator.assemble(tokens.unwrap()).unwrap();
+
+
+    let file = File::create(args.output_file).unwrap();
+    let mut writer = BufWriter::new(file);
+    writer.write_all(&result).unwrap();
 
     println!("Done!");
 }
