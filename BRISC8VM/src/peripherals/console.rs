@@ -1,6 +1,8 @@
+use std::io::{self, Read};
+
 use crate::peripherals::Peripheral;
 
-pub struct Console { }
+pub struct Console {}
 
 impl Peripheral for Console {
     fn do_cycle(&mut self) -> () { }
@@ -10,6 +12,8 @@ impl Peripheral for Console {
     }
 
     fn do_read(&mut self, _addr: u8) -> u8 {
-        return 0;
+        let mut buf = [0u8; 1];
+        io::stdin().read_exact(&mut buf).unwrap();
+        return buf[0];
     }
 }

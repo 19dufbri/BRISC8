@@ -15,7 +15,7 @@
                     "--bin=brisc8vm"
                 ]
             },
-            "args": ["../SampleCode/SingleFiles/HelloWorld.b8b"]
+            "args": ["../SampleCode/SingleFiles/SampleBF.b8b"]
         },
         {
             "name": "Debug unit tests in executable 'brisc8vm'",

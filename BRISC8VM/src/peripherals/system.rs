@@ -7,6 +7,7 @@ impl Peripheral for System {
 
     fn do_write(&mut self, _addr: u8, value: u8) -> () {
         println!();
+        println!("Exited with code {value}");
         std::process::exit(value as i32);
     }
 

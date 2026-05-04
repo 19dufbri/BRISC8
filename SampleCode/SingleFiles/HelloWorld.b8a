@@ -29,7 +29,7 @@ IOW %R2, %R0                -- Print the char
 
 LIR %R2, $PrintStringIndex  -- Get our index
 LOA %R0, %R2
-LIR %R1, #0x01              -- Advance to next char
+LIR %R1, #1                  -- Advance to next char
 ADD %R0, %R1
 STO %R2, %R0                -- Store progress
 JMP %R2, $PrintLoop

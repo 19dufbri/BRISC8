@@ -47,7 +47,8 @@ impl Brisc8core {
         match opcode >> 4 {
             0b0000..=0b0011 => {
                 // LIL #i, rA
-                self.registers[r_a as usize] = imm;
+                let sign_bit = imm & 0b1000;
+                self.registers[r_a as usize] = (sign_bit << 4) | (sign_bit << 3) | (sign_bit << 2) | (sign_bit << 1) | imm;
             },
             0b0100..=0b0111 => {
                 // LIH #i, rA

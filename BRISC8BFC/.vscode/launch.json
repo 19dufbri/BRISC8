@@ -6,28 +6,28 @@
     "configurations": [
 
         {
-            "name": "Debug executable 'brisc8asm'",
+            "name": "Debug executable 'brisc8bfc'",
             "type": "lldb",
             "request": "launch",
             "cargo": {
                 "args": [
                     "run",
-                    "--bin=brisc8asm"
+                    "--bin=brisc8bfc"
                 ]
             },
             "env": {
                 "RUST_BACKTRACE": "1"
             },
-            "args": ["../SampleCode/SingleFiles/SampleBF.b8a", "../SampleCode/SingleFiles/SampleBF.b8b"]
+            "args": ["../SampleCode/SingleFiles/SampleBF.bf", "../SampleCode/SingleFiles/SampleBF.b8a"]
         },
         {
-            "name": "Debug unit tests in executable 'brisc8asm'",
+            "name": "Debug unit tests in executable 'brisc8bfc'",
             "type": "lldb",
             "request": "launch",
             "cargo": {
                 "args": [
                     "test",
-                    "--bin=brisc8asm"
+                    "--bin=brisc8bfc"
                 ]
             }
         }

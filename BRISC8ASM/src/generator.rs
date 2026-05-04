@@ -105,7 +105,9 @@ impl Generator {
     
     fn encode_imm_or_label(&mut self, opcode: u8, r_a: u8, arg: &InstructionArg, nibble: Nibble) -> u8 {
         return match arg {
-            InstructionArg::Immediate(i) => encode_imm(opcode, r_a, *i, nibble),
+            InstructionArg::Immediate(i) => {
+                return encode_imm(opcode, r_a, *i, nibble)
+            },
             InstructionArg::Label(label) => {
                 self.fixups.push(Fixup { offset: self.index as usize, label: label.into(), nibble });
                 encode_imm(opcode, r_a, 0, Nibble::Low)
