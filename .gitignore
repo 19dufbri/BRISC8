@@ -5,3 +5,5 @@ riderModule.iml
 /_ReSharper.Caches/
 /.vs
 */target/*
+BRISC8SV/build
+.idea/

@@ -1,0 +1,11 @@
+[package]
+name = "brisc8sv"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+marlin = { version = "0.16.0", features = ["verilog"] }
+snafu = "0.9.0"
+
+[dev-dependencies]
+snafu = "0.9.0"
