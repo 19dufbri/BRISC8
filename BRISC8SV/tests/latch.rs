@@ -36,4 +36,5 @@ fn run_step(latch: &mut Latch, data: u8, clock: u8, clear: u8, expected: u8) {
     latch.eval();
     let result: u8 = latch.q;
     println!("D {data} Clock {clock} Clear {clear} Expected {expected} Got {result}");
+    assert_eq!(result, expected);
 }

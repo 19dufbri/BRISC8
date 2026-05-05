@@ -5,8 +5,8 @@ module latch(
     output reg q
 );
 
-    always @ (clock or clear)
-        if (!clear)
+    always @ (d or clock or clear)
+        if (clear)
             q <= 0;
         else if (clock)
             q <= d;
