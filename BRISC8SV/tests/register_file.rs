@@ -4,7 +4,7 @@ use snafu::Whatever;
 use std::path::Path;
 
 #[test]
-//#[snafu::report]
+#[snafu::report]
 fn myregister() -> Result<(), Whatever> {
     let runtime = VerilatorRuntime::new(
         Path::new("build"),
@@ -75,7 +75,7 @@ fn read_value_tests(runtime: &VerilatorRuntime) -> Result<(), Whatever> {
             for pc_sel in 0..=1 {
                 regs.a_select = a;
                 regs.b_select = b;
-                regs.b_address_select = pc_sel;
+                regs.address_select = pc_sel;
                 do_clock(&mut regs);
 
                 assert_eq!(regs.alu_a, RESULTS[a as usize]);

@@ -1,17 +1,17 @@
 module register_file(
-    input [7: 0] main_bus,
-    input reset,
-    input clock,
-    input [1: 0] a_select,
-    input [1: 0] b_select,
-    input [1: 0] write_select,
-    input swap_en,
-    input b_address_select,
-    output [7: 0] alu_a,
-    output [7: 0] alu_b,
-    output [7: 0] address,
+    input logic [7:0] main_bus,
+    input logic reset,
+    input logic clock,
+    input logic [1:0] a_select,
+    input logic [1:0] b_select,
+    input logic [1:0] write_select,
+    input logic swap_en,
+    input logic address_select,
+    output logic [7:0] alu_a,
+    output logic [7:0] alu_b,
+    output logic [7:0] address,
 
-    output [31:0] dbg_reg_state
+    output logic [31:0] dbg_reg_state
 );
     logic [3:0] write_select_decode;
     logic [3:0][7:0] data_in_decode;
@@ -40,7 +40,7 @@ module register_file(
 
     assign alu_a = data_out_decode[a_select];
     assign alu_b = data_out_decode[b_select];
-    assign address = data_out_decode[b_address_select ? b_select : 3];
+    assign address = data_out_decode[address_select ? b_select : 3];
 
     assign dbg_reg_state = {data_out_decode[3], data_out_decode[2], data_out_decode[1], data_out_decode[0]};
 endmodule
