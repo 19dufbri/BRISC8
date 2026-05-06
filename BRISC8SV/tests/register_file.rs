@@ -22,6 +22,7 @@ fn myregister() -> Result<(), Whatever> {
     read_value_tests(&runtime)?;
     swap_tests(&runtime)?;
     reset_tests(&runtime)?;
+    inc_pc_tests(&runtime)?;
 
     Ok(())
 }
@@ -31,6 +32,7 @@ fn set_value_tests(runtime: &VerilatorRuntime) -> Result<(), Whatever> {
 
     regs.main_bus = 0x55;
     regs.a_select = 0b00;
+    regs.write_en = 1;
     do_clock(&mut regs);
     assert_eq!(regs.dbg_reg_state, 0x00_00_00_55);
 
@@ -56,6 +58,13 @@ fn set_value_tests(runtime: &VerilatorRuntime) -> Result<(), Whatever> {
 
     regs.main_bus = 0xAD;
     regs.write_select = 0b00;
+    do_clock(&mut regs);
+    assert_eq!(regs.dbg_reg_state, 0xBE_EF_DE_AD);
+
+    // Ignore writes when write_en = 0
+    regs.main_bus = 0x55;
+    regs.write_select = 0b00;
+    regs.write_en = 0;
     do_clock(&mut regs);
     assert_eq!(regs.dbg_reg_state, 0xBE_EF_DE_AD);
 
@@ -165,9 +174,35 @@ fn reset_tests(runtime: &VerilatorRuntime) -> Result<(), Whatever> {
     Ok(())
 }
 
+fn inc_pc_tests(runtime: &VerilatorRuntime) -> Result<(), Whatever> {
+    let mut regs = runtime.create_model_simple::<RegisterFile>().unwrap();
+
+    const RESULTS: [u8; 4] = [0xDE, 0xAD, 0xBE, 0xEF];
+    for i in 0..4 {
+        // reverse for reading order
+        write_reg(&mut regs, i, RESULTS[3 - i as usize]);
+    }
+
+    regs.inc_pc = 1;
+    do_clock(&mut regs);
+    assert_eq!(regs.dbg_reg_state, 0xDF_AD_BE_EF);
+    do_clock(&mut regs);
+    assert_eq!(regs.dbg_reg_state, 0xE0_AD_BE_EF);
+    do_clock(&mut regs);
+    assert_eq!(regs.dbg_reg_state, 0xE1_AD_BE_EF);
+
+    // Only increment when enabled
+    regs.inc_pc = 0;
+    do_clock(&mut regs);
+    assert_eq!(regs.dbg_reg_state, 0xE1_AD_BE_EF);
+
+    Ok(())
+}
+
 fn write_reg(regs: &mut RegisterFile, reg: u8, data: u8) {
     regs.main_bus = data;
     regs.write_select = reg;
+    regs.write_en = 1;
     do_clock(regs);
     let result = match reg {
         0b00 => regs.dbg_reg_state & 0xFF,
@@ -177,6 +212,7 @@ fn write_reg(regs: &mut RegisterFile, reg: u8, data: u8) {
         _ => panic!("Register out of range, expected [0, 3] got {reg}"),
     };
     assert_eq!(result as u8, data);
+    regs.write_en = 0;
 }
 
 fn do_clock(regs: &mut RegisterFile) {
