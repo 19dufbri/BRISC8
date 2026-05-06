@@ -1,0 +1,11 @@
+source_dirs:
+  - BRISC8SV/src/sv # or whatever subdirectory your .sv files are in
+
+verilator:
+  syntax:
+    args:
+      - --lint-only
+      - --sv
+      - -Wall
+      - -y
+      - BRISC8SV/src/sv

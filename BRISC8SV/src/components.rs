@@ -1,2 +1,2 @@
-pub mod latch;
-pub mod myregister;
+pub mod register8;
+pub mod register_file;

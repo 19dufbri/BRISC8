@@ -7,3 +7,4 @@ riderModule.iml
 */target/*
 BRISC8SV/build
 .idea/
+obj_dir/
