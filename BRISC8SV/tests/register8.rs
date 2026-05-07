@@ -4,7 +4,7 @@ use snafu::Whatever;
 use std::path::Path;
 
 #[test]
-//#[snafu::report]
+#[snafu::report]
 fn register8() -> Result<(), Whatever> {
     let runtime = VerilatorRuntime::new(
         Path::new("build"),
